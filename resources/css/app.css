@@ -9,6 +9,8 @@
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
         "Noto Color Emoji";
 
+    --font-display: "Fraunces", "Instrument Sans", ui-serif, Georgia, serif;
+
     /* Palet "Nature / Botanical" modern & minimalis */
     --color-brand-50: #f0fdf4;
     --color-brand-100: #dcfce7;
@@ -101,19 +103,196 @@
     .panel {
         @apply bg-white rounded-2xl shadow-sm border border-slate-200/70 p-5 sm:p-6;
     }
+
+    /* Judul dengan font display (serif elegan) */
+    .display-title {
+        @apply font-display font-semibold text-slate-900 tracking-tight;
+    }
+
+    /* Teks dengan gradasi hijau botanical */
+    .text-gradient {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-600 via-brand-500 to-emerald-400;
+    }
+
+    /* Kartu kaca (glass) */
+    .glass {
+        @apply bg-white/80 backdrop-blur-md border border-white/60 shadow-lg shadow-slate-900/5;
+    }
+
+    /* Chip dekoratif kecil pada header section */
+    .section-chip {
+        @apply inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-brand-700 bg-brand-50 ring-1 ring-brand-100 rounded-full px-3 py-1.5;
+    }
+
+    /* Bola cahaya dekoratif (hero) */
+    .orb {
+        @apply absolute rounded-full blur-3xl pointer-events-none;
+    }
+
+    /* Efek masuk halus saat scroll (dikontrol app.js) */
+    .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        will-change: opacity, transform;
+    }
+    .reveal.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Delay bertahap untuk grid */
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+
+    /* ============================================================
+       PARALLAX — gaya "WEBSITE PARALAX" (blend hijau + gelap)
+       ============================================================ */
+
+    /* Section dengan background gambar yang "mengalir" saat scroll */
+    .parallax-bg {
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        position: relative;
+    }
+    /* iOS & beberapa browser mobile tidak suka background-attachment: fixed */
+    @supports (-webkit-touch-callout: none) {
+        .parallax-bg { background-attachment: scroll; }
+    }
+
+    /* Overlay gelap editorial bercampur hijau botani */
+    .parallax-overlay {
+        background:
+            linear-gradient(to bottom, rgba(15, 23, 42, 0.45), rgba(15, 23, 42, 0.30)),
+            linear-gradient(to top, rgba(20, 83, 45, 0.70), rgba(6, 78, 59, 0.45));
+    }
+
+    /* Hero layar penuh yang memusatkan konten */
+    .parallax-hero {
+        min-height: 100svh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    /* Judul editorial raksasa ala situs parallax */
+    .editorial-title {
+        font-family: var(--font-display);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        line-height: 1.04;
+        text-shadow: 0 2px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    /* Petunjuk scroll ke bawah */
+    .scroll-cue {
+        animation: cue 1.8s ease-in-out infinite;
+    }
+
+    /* Tile galeri dengan huruf besar overlay (seperti A C E H di parallax) */
+    .gallery-tile {
+        position: relative;
+        overflow: hidden;
+        border-radius: 1.5rem;
+        isolation: isolate;
+    }
+    .gallery-tile img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s ease, opacity 0.4s ease;
+    }
+    .gallery-tile:hover img {
+        transform: scale(1.08);
+        opacity: 0.85;
+    }
+    .gallery-tile .gt-letter {
+        position: absolute;
+        left: 50%;
+        bottom: -10%;
+        transform: translateX(-50%);
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: clamp(3rem, 7vw, 6rem);
+        color: #fff;
+        text-shadow: 0 4px 24px rgba(0, 0, 0, 0.55);
+        pointer-events: none;
+        z-index: 1;
+    }
+    .gallery-tile .gt-label {
+        position: absolute;
+        left: 1rem;
+        top: 1rem;
+        z-index: 1;
+    }
+
+    /* Kartu putih rounded bergaya ".wrapper" parallax (gambar + teks) */
+    .feature-card {
+        @apply bg-white rounded-3xl shadow-2xl shadow-slate-900/10 border border-slate-100 overflow-hidden;
+    }
+
+    /* Tombol inverted hitam/putih ala "tombol-daftar" parallax */
+    .cta-invert {
+        @apply inline-flex items-center justify-center gap-2 font-semibold rounded-xl transition-all duration-300 bg-ink-900 text-white hover:bg-white hover:text-ink-900 ring-1 ring-ink-900 px-7 py-3 text-sm;
+    }
 }
 
-/* Animasi halus untuk elemen dekoratif & masuk */
+/* ============================================================
+   ANIMASI DEKORATIF
+   ============================================================ */
+
 @keyframes blob {
     0%, 100% { transform: translate(0, 0) scale(1); }
     33% { transform: translate(20px, -30px) scale(1.1); }
     66% { transform: translate(-20px, 20px) scale(0.95); }
 }
 .animate-blob { animation: blob 18s ease-in-out infinite; }
+
+@keyframes cue {
+    0%, 100% { transform: translateY(0); opacity: 0.7; }
+    50% { transform: translateY(10px); opacity: 1; }
+}
 .animation-delay-2000 { animation-delay: 2s; }
 .animation-delay-4000 { animation-delay: 4s; }
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+.animate-float { animation: float 6s ease-in-out infinite; }
+
+@keyframes shimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+}
+
+@keyframes pulse-ring {
+    0% { transform: scale(0.9); opacity: 0.7; }
+    100% { transform: scale(1.6); opacity: 0; }
+}
+.animate-pulse-ring { animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+
+/* Harga klik QR pada kartu (efek scan line) */
+@keyframes scan-line {
+    0% { top: 0%; }
+    50% { top: calc(100% - 3px); }
+    100% { top: 0%; }
+}
+.animate-scan-line {
+    animation: scan-line 3s ease-in-out infinite;
+}
 
 /* Scrollbar halus */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; border: 2px solid #f8fafc; }
 ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .animate-blob, .animate-float, .animate-pulse-ring, .animate-scan-line { animation: none; }
+}

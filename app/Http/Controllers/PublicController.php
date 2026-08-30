@@ -11,7 +11,11 @@ class PublicController extends Controller
     public function index()
     {
         $latestPlants = Plant::latest()->take(3)->get();
-        return view('public.home', compact('latestPlants'));
+        $stats = [
+            'total_plants' => Plant::count(),
+            'total_families' => Plant::distinct('famili')->count(),
+        ];
+        return view('public.home', compact('latestPlants', 'stats'));
     }
 
     // Halaman Galeri Tumbuhan

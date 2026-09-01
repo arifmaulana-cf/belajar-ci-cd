@@ -37,6 +37,9 @@ pipeline {
             environment {
                 APP_ENV = 'production'
             }
+            when {
+                branch 'main'
+            }
             steps {
                 sh '''
                     php artisan migrate --force

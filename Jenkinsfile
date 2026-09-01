@@ -22,6 +22,7 @@ pipeline {
             steps {
                 sh 'cp .env.example .env || true'
                 sh 'php artisan key:generate'
+                sh 'php artisan migrate --env=testing --force'
             }
         }
 

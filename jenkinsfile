@@ -1,0 +1,61 @@
+pipeline {
+    agent any
+
+    environment {
+        APP_ENV = 'production'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'composer install --no-dev --optimize-autoloader'
+            }
+        }
+
+        stage('Copy .env') {
+            steps {
+                sh 'cp .env.example .env || true'
+                sh 'php artisan key:generate'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh 'php artisan test'
+            }
+        }
+
+        stage('Build Assets') {
+            steps {
+                sh 'npm install && npm run build'
+            }
+        }
+
+        stage('Deploy') {
+            when {
+                branch 'main'
+            }
+            steps {
+                sh '''
+                    php artisan migrate --force
+                    sudo systemctl restart digiflora
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build & deploy berhasil!'
+        }
+        failure {
+            echo 'Build gagal, cek log di atas.'
+        }
+    }
+}

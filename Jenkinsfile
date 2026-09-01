@@ -1,44 +1,36 @@
 pipeline {
     agent any
-
-    environment {
-        APP_ENV = 'production'
-    }
-
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-
         stage('Install Dependencies') {
             steps {
                 sh 'composer install --optimize-autoloader'
             }
         }
-
         stage('Copy .env') {
             steps {
-                sh 'cp .env.example .env || true'
+                sh 'cp .env.example .env'
                 sh 'php artisan key:generate'
-                sh 'php artisan migrate --env=testing --force'
             }
         }
-
         stage('Run Tests') {
             steps {
                 sh 'php artisan test'
             }
         }
-
         stage('Build Assets') {
             steps {
                 sh 'npm install && npm run build'
             }
         }
-
         stage('Deploy') {
+            environment {
+                APP_ENV = 'production'   // taruh di sini saja, khusus stage deploy
+            }
             when {
                 branch 'main'
             }
@@ -48,15 +40,6 @@ pipeline {
                     sudo systemctl restart digiflora
                 '''
             }
-        }
-    }
-
-    post {
-        success {
-            echo 'Build & deploy berhasil!'
-        }
-        failure {
-            echo 'Build gagal, cek log di atas.'
         }
     }
 }

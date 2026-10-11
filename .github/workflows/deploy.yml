@@ -17,6 +17,8 @@ jobs:
 
       - run: cp .env.example .env
       - run: composer install --no-interaction --prefer-dist
+      - run: npm ci
+      - run: npm run build
       - run: php artisan key:generate
       - run: php artisan test
 
